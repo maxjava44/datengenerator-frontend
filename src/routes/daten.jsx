@@ -18,6 +18,11 @@ export default function Home() {
         return await response.json();
     });
 
+    const [emails, { mutate: mutateEmails, refetch: refetchEmails }] = createResource(async () => {
+        const response = await fetch("http://129.159.203.225:8080/namen/email/" + number());
+        return await response.json();
+    });
+
     return (
         <main>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.min.js"></script>
@@ -32,19 +37,21 @@ export default function Home() {
                     setNumber(e.currentTarget.value)
                     refetch()
                     refetchStreets()
+                    refetchEmails()
                 }}/>
                     <div class="mb-3 form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={(e) => {
                         setFemale(e.currentTarget.checked)
                         refetch()
                         refetchStreets()
+                        refetchEmails()
                     }}/>
   <label class="form-check-label mx-3" for="flexSwitchCheckDefault">Weiblich?</label>
                     </div>
                     
                 </form>
 
-                <button class="btn btn-primary" onClick={() => {refetch();refetchStreets()}}>Reload</button><br></br>
+                <button class="btn btn-primary" onClick={() => {refetch();refetchStreets();refetchEmails()}}>Reload</button><br></br>
                 <button class="btn btn-primary mt-1" onClick={() => {
                     fetch('http://localhost:8080/namen/download', {
                         method: 'POST',
@@ -71,12 +78,14 @@ export default function Home() {
                         <tr>
                             <th>Name</th>
                             <th>Adresse</th> 
+                            <th>E-Mail</th> 
                         </tr>
                         <Index each={namen()} fallback={<div>Loading...</div>}>
                             {(name, index) => (
                                 <tr>
                                     <td>{name}</td>
                                     <td>{streets()[index]}</td>
+                                    <td>{emails()[index]}</td>
                                 </tr>
                             )}
                         </Index>
