@@ -1,6 +1,6 @@
 import { createRouteData, Title, useParams } from "solid-start";
 import { createEffect, createResource, createSignal, For } from "solid-js";
-import "../bootstrap.min.css"
+import "./bootstrap.min.css"
 import { isServer } from "solid-js/web";
 
 export default function Home() {
@@ -10,6 +10,11 @@ export default function Home() {
 
     const [namen, { mutate, refetch }] = createResource(async () => {
         const response = await fetch("http://129.159.203.225:8080/namen/" + "Deutschland" + "/" + number() + "/" + female());
+        return await response.json();
+    });
+
+    const [streets, { mutate: mutateStreets, refetch: refetchStreets }] = createResource(async () => {
+        const response = await fetch("http://129.159.203.225:8080/namen/street/" + number());
         return await response.json();
     });
 
@@ -26,18 +31,20 @@ export default function Home() {
 <input type="range" class="form-range" min="0" max="50" step="1" value="0" id="customRange3" onChange={(e) => {
                     setNumber(e.currentTarget.value)
                     refetch()
+                    refetchStreets()
                 }}/>
                     <div class="mb-3 form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={(e) => {
                         setFemale(e.currentTarget.checked)
                         refetch()
+                        refetchStreets()
                     }}/>
   <label class="form-check-label mx-3" for="flexSwitchCheckDefault">Weiblich?</label>
                     </div>
                     
                 </form>
 
-                <button class="btn btn-primary" onClick={() => refetch()}>Reload</button><br></br>
+                <button class="btn btn-primary" onClick={() => {refetch();refetchStreets()}}>Reload</button><br></br>
                 <button class="btn btn-primary mt-1" onClick={() => {
                     fetch('http://localhost:8080/namen/download', {
                         method: 'POST',
@@ -59,9 +66,22 @@ export default function Home() {
                 <br></br>
                 <br></br>
                 <Suspense fallback={<div></div>}>
-                    <For each={namen()}>
-                        {(name) => <li>{name}</li>}
-                    </For>
+                    <table>
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <th>Adresse</th> 
+                        </tr>
+                        <Index each={namen()} fallback={<div>Loading...</div>}>
+                            {(name, index) => (
+                                <tr>
+                                    <td>{name}</td>
+                                    <td>{streets()[index]}</td>
+                                </tr>
+                            )}
+                        </Index>
+                        </tbody>
+                    </table>
                 </Suspense>
                 
             </div>
