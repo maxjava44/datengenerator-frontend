@@ -16,10 +16,14 @@ export default function Home() {
   return (
     <main>
       <Title>Namensgenerator</Title>
-      <div className="center" style="margin:auto">
+      <div className="d-flex w-full align-items-center justify-content-center">
+        <div className="">
         <For each={regions()}>
           {(region) => <button  style= "margin:20px" type="button" class="btn btn-primary" onClick={() => navigate("/" + region)}>{region}</button>}
         </For>
+        </div>
+    
+        <button style= "margin:20px" type="button" class="btn btn-primary" onClick={() => navigate("/daten")}>Datengenerator</button>
       </div>
       
     </main>
