@@ -3,12 +3,24 @@ import { createEffect, createResource, createSignal, For } from "solid-js";
 import "./bootstrap.min.css"
 import { isServer } from "solid-js/web";
 
+function zip(...arrays) {
+    var returnArray = []
+    for (let index = 0; index < arrays[0].length; index++) {
+        var tmparr = []
+        arrays.forEach(array => {
+            tmparr.push(array[index])
+        });
+        returnArray.push(tmparr)
+    }
+    return returnArray
+}
+
 export default function Home() {
 
     const [female,setFemale] = createSignal(false)
     const [number,setNumber] = createSignal(0)
 
-    const [namen, { mutate, refetch }] = createResource(async () => {
+    const [namen, { mutate, refetch: refetchNames }] = createResource(async () => {
         const response = await fetch("http://129.159.203.225:8080/namen/" + "Deutschland" + "/" + number() + "/" + female());
         return await response.json();
     });
@@ -23,6 +35,24 @@ export default function Home() {
         return await response.json();
     });
 
+    const [telNrs, { mutate: mutateTel, refetch: refetchTel }] = createResource(async () => {
+        const response = await fetch("http://129.159.203.225:8080/namen/telnr/" + number());
+        return await response.json();
+    });
+
+    const [datums, { mutate: mutateDate, refetch: refetchDate }] = createResource(async () => {
+        const response = await fetch("http://129.159.203.225:8080/namen/datum/" + number());
+        return await response.json();
+    });
+
+    function refetch() {
+        refetchNames()
+        refetchStreets()
+        refetchEmails()
+        refetchTel()
+        refetchDate()
+    }
+
     return (
         <main>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.min.js"></script>
@@ -36,24 +66,21 @@ export default function Home() {
 <input type="range" class="form-range" min="0" max="50" step="1" value="0" id="customRange3" onChange={(e) => {
                     setNumber(e.currentTarget.value)
                     refetch()
-                    refetchStreets()
-                    refetchEmails()
                 }}/>
                     <div class="mb-3 form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={(e) => {
+                        console.log(zip(namen(),streets(),emails(),telNrs(),datums()))
                         setFemale(e.currentTarget.checked)
                         refetch()
-                        refetchStreets()
-                        refetchEmails()
                     }}/>
   <label class="form-check-label mx-3" for="flexSwitchCheckDefault">Weiblich?</label>
                     </div>
                     
                 </form>
 
-                <button class="btn btn-primary" onClick={() => {refetch();refetchStreets();refetchEmails()}}>Reload</button><br></br>
+                <button class="btn btn-primary" onClick={() => {refetch()}}>Reload</button><br></br>
                 <button class="btn btn-primary mt-1" onClick={() => {
-                    fetch('http://localhost:8080/namen/download', {
+                    fetch('http://129.159.203.225:8080/namen/download', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -61,7 +88,7 @@ export default function Home() {
                             'Access-Control-Allow-Methods' : '*',
                             'Access-Control-Allow-Headers' : '*'
                         },
-                        body: JSON.stringify(namen())
+                        body: JSON.stringify(zip(namen(),streets(),emails(),telNrs(),datums()))
                     }).then(function(resp) {
                         return resp.blob();
                     }).then(function(blob) {
@@ -72,26 +99,32 @@ export default function Home() {
                 
                 <br></br>
                 <br></br>
-                <Suspense fallback={<div></div>}>
+                
                     <table>
                     <tbody>
                         <tr>
                             <th>Name</th>
                             <th>Adresse</th> 
                             <th>E-Mail</th> 
+                            <th>Tel Nr.</th>
+                            <th>Geburtsdatum</th>
                         </tr>
-                        <Index each={namen()} fallback={<div>Loading...</div>}>
-                            {(name, index) => (
-                                <tr>
-                                    <td>{name}</td>
-                                    <td>{streets()[index]}</td>
-                                    <td>{emails()[index]}</td>
-                                </tr>
-                            )}
-                        </Index>
+                        <Suspense fallback={<div></div>}>
+                            <Index each={namen()} fallback={<div>Loading...</div>}>
+                                {(name, index) => (
+                                    <tr>
+                                        <td>{name}</td>
+                                        <td>{streets()[index]}</td>
+                                        <td>{emails()[index]}</td>
+                                        <td>{telNrs()[index]}</td>
+                                        <td>{datums()[index]}</td>
+                                    </tr>
+                                )}
+                            </Index>
+                        </Suspense>
                         </tbody>
                     </table>
-                </Suspense>
+                
                 
             </div>
 
