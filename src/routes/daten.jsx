@@ -55,7 +55,6 @@ export default function Home() {
 
     return (
         <main>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.min.js"></script>
             <Title>Namensgenerator</Title>
             <div class="container">
                 

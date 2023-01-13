@@ -20,6 +20,7 @@ export default function Root() {
         <Title>Namengenerator</Title>
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.min.js"></script>
       </Head>
       <Body>
         <Suspense>
