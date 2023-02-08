@@ -41,7 +41,7 @@ export default function Home() {
 
                 <button class="btn btn-primary" onClick={() => refetch()}>Reload</button><br></br>
                 <button class="btn btn-primary mt-1" onClick={() => {
-                    fetch('http://localhost:8080/namen/downloadalt', {
+                    fetch('http://129.159.203.225:8080/namen/downloadalt', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
