@@ -20,7 +20,7 @@ export default function Home() {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.min.js"></script>
             <Title>Namensgenerator</Title>
             <div class="container">
-                
+
                 <br></br>
 
                 <form>
@@ -36,12 +36,12 @@ export default function Home() {
                     }}/>
   <label class="form-check-label mx-3" for="flexSwitchCheckDefault">Weiblich?</label>
                     </div>
-                    
+
                 </form>
 
                 <button class="btn btn-primary" onClick={() => refetch()}>Reload</button><br></br>
                 <button class="btn btn-primary mt-1" onClick={() => {
-                    fetch('http://localhost:8080/namen/download', {
+                    fetch('http://localhost:8080/namen/downloadalt', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function Home() {
                     });
                 }}>Download as CSV</button><br></br>
                 <button type="button" class="btn btn-secondary mt-1" onClick={() => window.location.assign(window.location.origin)}>Back to Start</button>
-                
+
                 <br></br>
                 <br></br>
                 <Suspense fallback={<div></div>}>
@@ -65,7 +65,7 @@ export default function Home() {
                         {(name) => <li>{name}</li>}
                     </For>
                 </Suspense>
-                
+
             </div>
 
 
