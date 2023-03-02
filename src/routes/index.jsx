@@ -2,13 +2,10 @@ import { Title, useNavigate, useRouteData } from "solid-start";
 import { createResource } from "solid-js";
 import "./bootstrap.min.css"
 
-export function routeData() {
-    return import.meta.env.VITE_SERVER;
-}
 
 export default function Home() {
 
-  const server = useRouteData();
+  const server = import.meta.env.VITE_SERVER;
 
   const [regions] = createResource(async () => {
     const response = await fetch("http://" + server + ":8080/namen/regions");

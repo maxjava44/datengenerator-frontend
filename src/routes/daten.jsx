@@ -3,10 +3,6 @@ import { createEffect, createResource, createSignal, For } from "solid-js";
 import "./bootstrap.min.css"
 import { isServer } from "solid-js/web";
 
-export function routeData() {
-    return import.meta.env.VITE_SERVER;
-}
-
 function zip(...arrays) {
     var returnArray = []
     for (let index = 0; index < arrays[0].length; index++) {
@@ -21,7 +17,7 @@ function zip(...arrays) {
 
 export default function Home() {
 
-    const server = useRouteData();
+    const server = import.meta.env.VITE_SERVER;
 
     const [female,setFemale] = createSignal(false)
     const [number,setNumber] = createSignal(0)
