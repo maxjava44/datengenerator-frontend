@@ -3,6 +3,10 @@ import { createEffect, createResource, createSignal, For } from "solid-js";
 import "./bootstrap.min.css"
 import { isServer } from "solid-js/web";
 
+export function routeData() {
+    return import.meta.env["VITE_SERVER"];
+}
+
 function zip(...arrays) {
     var returnArray = []
     for (let index = 0; index < arrays[0].length; index++) {
@@ -17,31 +21,33 @@ function zip(...arrays) {
 
 export default function Home() {
 
+    const server = useRouteData();
+
     const [female,setFemale] = createSignal(false)
     const [number,setNumber] = createSignal(0)
 
     const [namen, { mutate, refetch: refetchNames }] = createResource(async () => {
-        const response = await fetch("http://129.159.203.225:8080/namen/" + "Deutschland" + "/" + number() + "/" + female());
+        const response = await fetch("http://" + server +":8080/namen/" + "Deutschland" + "/" + number() + "/" + female());
         return await response.json();
     });
 
     const [streets, { mutate: mutateStreets, refetch: refetchStreets }] = createResource(async () => {
-        const response = await fetch("http://129.159.203.225:8080/namen/street/" + number());
+        const response = await fetch("http://" + server +":8080/namen/street/" + number());
         return await response.json();
     });
 
     const [emails, { mutate: mutateEmails, refetch: refetchEmails }] = createResource(async () => {
-        const response = await fetch("http://129.159.203.225:8080/namen/email/" + number());
+        const response = await fetch("http://" + server + ":8080/namen/email/" + number());
         return await response.json();
     });
 
     const [telNrs, { mutate: mutateTel, refetch: refetchTel }] = createResource(async () => {
-        const response = await fetch("http://129.159.203.225:8080/namen/telnr/" + number());
+        const response = await fetch("http://" + server + ":8080/namen/telnr/" + number());
         return await response.json();
     });
 
     const [datums, { mutate: mutateDate, refetch: refetchDate }] = createResource(async () => {
-        const response = await fetch("http://129.159.203.225:8080/namen/datum/" + number());
+        const response = await fetch("http://" + server + ":8080/namen/datum/" + number());
         return await response.json();
     });
 
@@ -57,7 +63,7 @@ export default function Home() {
         <main>
             <Title>Namensgenerator</Title>
             <div class="container">
-                
+
                 <br></br>
 
                 <form>
@@ -74,12 +80,12 @@ export default function Home() {
                     }}/>
   <label class="form-check-label mx-3" for="flexSwitchCheckDefault">Weiblich?</label>
                     </div>
-                    
+
                 </form>
 
                 <button class="btn btn-primary" onClick={() => {refetch()}}>Reload</button><br></br>
                 <button class="btn btn-primary mt-1" onClick={() => {
-                    fetch('http://129.159.203.225:8080/namen/download', {
+                    fetch('http://' + server + ':8080/namen/download', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -95,16 +101,16 @@ export default function Home() {
                     });
                 }}>Download as CSV</button><br></br>
                 <button type="button" class="btn btn-secondary mt-1" onClick={() => window.location.assign(window.location.origin)}>Back to Start</button>
-                
+
                 <br></br>
                 <br></br>
-                
+
                     <table>
                     <tbody>
                         <tr>
                             <th>Name</th>
-                            <th>Adresse</th> 
-                            <th>E-Mail</th> 
+                            <th>Adresse</th>
+                            <th>E-Mail</th>
                             <th>Tel Nr.</th>
                             <th>Geburtsdatum</th>
                         </tr>
@@ -123,8 +129,8 @@ export default function Home() {
                         </Suspense>
                         </tbody>
                     </table>
-                
-                
+
+
             </div>
 
 

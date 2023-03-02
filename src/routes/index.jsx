@@ -1,17 +1,23 @@
-import { Title, useNavigate } from "solid-start";
+import { Title, useNavigate, useRouteData } from "solid-start";
 import { createResource } from "solid-js";
 import "./bootstrap.min.css"
 
+export function routeData() {
+    return import.meta.env["VITE_SERVER"];
+}
+
 export default function Home() {
 
-
+  const server = useRouteData();
 
   const [regions] = createResource(async () => {
-    const response = await fetch("http://129.159.203.225:8080/namen/regions");
+    const response = await fetch("http://" + server + ":8080/namen/regions");
     return await response.json();
   });
 
   const navigate = useNavigate()
+
+
 
   return (
     <main>
@@ -22,10 +28,10 @@ export default function Home() {
           {(region) => <button  style= "margin:20px" type="button" class="btn btn-primary" onClick={() => navigate("/" + region)}>{region}</button>}
         </For>
         </div>
-    
+
         <button style= "margin:20px" type="button" class="btn btn-primary" onClick={() => navigate("/daten")}>Datengenerator</button>
       </div>
-      
+
     </main>
   );
 }

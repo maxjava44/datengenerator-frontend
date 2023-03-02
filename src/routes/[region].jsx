@@ -3,10 +3,11 @@ import { createResource, For } from "solid-js";
 import "./bootstrap.min.css"
 
 export function routeData() {
-    
+
+
     const params = useParams()
     const [countries] = createResource(async () => {
-        const response = await fetch("http://129.159.203.225:8080/namen/countries/" + params.region);
+        const response = await fetch("http://"+import.meta.env["VITE_SERVER"]+":8080/namen/countries/" + params.region);
         return (await response.json());
     });
     return {countries}

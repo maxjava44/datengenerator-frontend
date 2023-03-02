@@ -3,7 +3,13 @@ import { createEffect, createResource, createSignal, For } from "solid-js";
 import "../bootstrap.min.css"
 import { isServer } from "solid-js/web";
 
+export function routeData() {
+    return import.meta.env["VITE_SERVER"];
+}
+
 export default function Home() {
+
+    const server = useRouteData();
 
     const [female,setFemale] = createSignal(false)
     const [number,setNumber] = createSignal(0)
@@ -11,7 +17,7 @@ export default function Home() {
     const params = useParams()
 
     const [namen, { mutate, refetch }] = createResource(async () => {
-        const response = await fetch("http://129.159.203.225:8080/namen/" + params.land + "/" + number() + "/" + female());
+        const response = await fetch("http://"+ server +":8080/namen/" + params.land + "/" + number() + "/" + female());
         return await response.json();
     });
 
@@ -41,7 +47,7 @@ export default function Home() {
 
                 <button class="btn btn-primary" onClick={() => refetch()}>Reload</button><br></br>
                 <button class="btn btn-primary mt-1" onClick={() => {
-                    fetch('http://129.159.203.225:8080/namen/downloadalt', {
+                    fetch('http://'+ server +':8080/namen/downloadalt', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
