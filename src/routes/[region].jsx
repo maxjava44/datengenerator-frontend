@@ -7,7 +7,7 @@ export function routeData() {
 
     const params = useParams()
     const [countries] = createResource(async () => {
-        const response = await fetch("http://"+import.meta.env["VITE_SERVER"]+":8080/namen/countries/" + params.region);
+        const response = await fetch("http://"+import.meta.env.VITE_SERVER +":8080/namen/countries/" + params.region);
         return (await response.json());
     });
     return {countries}

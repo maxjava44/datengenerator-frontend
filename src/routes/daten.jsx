@@ -1,10 +1,10 @@
-import { createRouteData, Title, useParams } from "solid-start";
+import { createRouteData, Title, useParams, useRouteData } from "solid-start";
 import { createEffect, createResource, createSignal, For } from "solid-js";
 import "./bootstrap.min.css"
 import { isServer } from "solid-js/web";
 
 export function routeData() {
-    return import.meta.env["VITE_SERVER"];
+    return import.meta.env.VITE_SERVER;
 }
 
 function zip(...arrays) {

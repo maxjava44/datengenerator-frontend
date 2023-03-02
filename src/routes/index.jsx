@@ -3,7 +3,7 @@ import { createResource } from "solid-js";
 import "./bootstrap.min.css"
 
 export function routeData() {
-    return import.meta.env["VITE_SERVER"];
+    return import.meta.env.VITE_SERVER;
 }
 
 export default function Home() {
